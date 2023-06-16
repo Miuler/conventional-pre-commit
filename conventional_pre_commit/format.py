@@ -1,32 +1,20 @@
 import re
 
 CONVENTIONAL_TYPES = ["feat", "fix"]
-DEFAULT_TYPES = [
-    "build",
-    "chore",
-    "ci",
-    "docs",
-    "feat",
-    "fix",
-    "perf",
-    "refactor",
-    "revert",
-    "style",
-    "test",
-]
-_DEFAULT_TYPES: list[tuple[list[str], str]] = [
-    (["✨"], "build"),
-    ([], "chore"),
-    ([], "ci"),
-    ([], "docs"),
-    ([], "feat"),
-    ([], "fix"),
-    ([], "perf"),
-    ([], "refactor"),
-    ([], "revert"),
-    ([], "style"),
-    ([], "test"),
-]
+DEFAULT_TYPES_WITH_EMOJI: dict = {
+    "build": ["🏗️"],
+    "chore": [],
+    "ci": ["👷"],
+    "docs": ["📝"],
+    "feat": ["✨", "🚩"],
+    "fix": ["🐛", "🚑️", "🚨", "🩹"],
+    "perf": ["⚡️", "⚗️", "🗃️"],
+    "refactor": ["♻️"],
+    "revert": ["⏪️"],
+    "style": ["💄"],
+    "test": ["✅", "🧪"],
+}
+DEFAULT_TYPES: list[str] = list(DEFAULT_TYPES_WITH_EMOJI.keys())
 
 
 def r_types(types: list[str]) -> str:
@@ -59,7 +47,9 @@ def conventional_types(types: list[str] = []) -> list[str]:
     return types
 
 
-def is_conventional(input: str, types: list[str] = DEFAULT_TYPES, optional_scope: bool = True) -> bool:
+def is_conventional(input: str,
+                    types: list[str] = DEFAULT_TYPES,
+                    optional_scope: bool = True) -> bool:
     """
     Returns True if input matches Conventional Commits formatting
     https://www.conventionalcommits.org
@@ -67,7 +57,8 @@ def is_conventional(input: str, types: list[str] = DEFAULT_TYPES, optional_scope
     Optionally provide a list of additional custom types.
     """
     types = conventional_types(types)
-    pattern = f"^({r_types(types)}){r_scope(optional_scope)}{r_delim()}{r_subject()}$"
+    emoji = (" |".join(list(map(lambda _type: " |".join(DEFAULT_TYPES_WITH_EMOJI[_type]), DEFAULT_TYPES))) + "|").replace("| |", "|")
+    pattern = f"^({emoji})({r_types(types)}){r_scope(optional_scope)}{r_delim()}{r_subject()}$".replace("| |", "|")
     regex = re.compile(pattern, re.DOTALL)
 
     return bool(regex.match(input))

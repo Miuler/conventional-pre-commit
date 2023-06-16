@@ -130,9 +130,12 @@ def test_is_conventional__default_type(type):
     assert format.is_conventional(input)
 
 
-@pytest.mark.parametrize("type", format.DEFAULT_TYPES)
+@pytest.mark.parametrize("type", format.DEFAULT_TYPES_WITH_EMOJI)
 def test_is_conventional__default_type__whit_emoji(type):
-    input = f"{type}: message"
+    emoji = format.DEFAULT_TYPES_WITH_EMOJI[type]
+    emoji = f"{emoji[0]} " if(len(emoji) > 0) else ""
+    input = f"{emoji}{type}: message"
+    print(f"input: {input}\n")
 
     assert format.is_conventional(input)
 
