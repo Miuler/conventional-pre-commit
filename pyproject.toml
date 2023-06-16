@@ -46,3 +46,7 @@ norecursedirs = [
     ".pytest_cache",
     ".vscode",
 ]
+
+[tool.ruff]
+select = ["E", "F", "ANN"]
+line-length = 120

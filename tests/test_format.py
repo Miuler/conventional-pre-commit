@@ -1,3 +1,4 @@
+import logging
 import re
 
 import pytest
@@ -5,6 +6,14 @@ import pytest
 from conventional_pre_commit import format
 
 CUSTOM_TYPES = ["one", "two"]
+
+log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
+stream = logging.StreamHandler()
+stream.setLevel(logging.INFO)
+streamformat = logging.Formatter("%(asctime)s:%(levelname)s:%(message)s")
+stream.setFormatter(streamformat)
+log.addHandler(stream)
 
 
 def test_r_types():
@@ -116,6 +125,13 @@ def test_conventional_types__custom():
 
 @pytest.mark.parametrize("type", format.DEFAULT_TYPES)
 def test_is_conventional__default_type(type):
+    input = f"{type}: message"
+
+    assert format.is_conventional(input)
+
+
+@pytest.mark.parametrize("type", format.DEFAULT_TYPES)
+def test_is_conventional__default_type__whit_emoji(type):
     input = f"{type}: message"
 
     assert format.is_conventional(input)

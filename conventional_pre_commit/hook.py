@@ -14,15 +14,15 @@ class Colors:
     YELLOW = "\033[00;33m"
 
 
-def main(argv=[]):
-    parser = argparse.ArgumentParser(
-        prog="conventional-pre-commit", description="Check a git commit message for Conventional Commits formatting."
-    )
-    parser.add_argument("types", type=str, nargs="*", default=format.DEFAULT_TYPES, help="Optional list of types to support")
-    parser.add_argument("input", type=str, help="A file containing a git commit message")
-    parser.add_argument(
-        "--force-scope", action="store_false", default=True, dest="optional_scope", help="Force commit to have scope defined."
-    )
+def main(argv: list[str] = []) -> int:
+    parser = argparse.ArgumentParser(prog="conventional-pre-commit",
+                                     description="Check a git commit message for Conventional Commits formatting.")
+    parser.add_argument("types", type=str, nargs="*", default=format.DEFAULT_TYPES,
+                        help="Optional list of types to support")
+    parser.add_argument("input", type=str,
+                        help="A file containing a git commit message")
+    parser.add_argument("--force-scope", action="store_false", default=True, dest="optional_scope",
+                        help="Force commit to have scope defined.")
 
     if len(argv) < 1:
         argv = sys.argv[1:]
